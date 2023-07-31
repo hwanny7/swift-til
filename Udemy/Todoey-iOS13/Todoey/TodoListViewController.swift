@@ -1,16 +1,10 @@
-//
-//  ViewController.swift
-//  Todoey
-//
-//  Created by Philipp Muellauer on 02/12/2019.
-//  Copyright © 2019 App Brewery. All rights reserved.
-//
+
 
 import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Budy Eggos", "Destory Demogorgon"]
+    var itemArray = ["Find Mike", "Budy Eggos", "Destory Demogorgon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,10 +27,41 @@ class TodoListViewController: UITableViewController {
     // MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        
+        
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
+
         tableView.deselectRow(at: indexPath, animated: true)
         // 선택된 셀 백그라운드 복구
     }
+    
+    // MARK: - Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: NSLocalizedString("Add item", comment: "Default acition"), style: .default) { action in
+            guard let userTextField = alert.textFields?.first?.text else { return }
+            if !userTextField.isEmpty {
+                self.itemArray.append(userTextField)
+                self.tableView.reloadData()
+            }
+            
+        }
+        alert.addTextField() { alertTextField in
+            alertTextField.placeholder = "Create new item"
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true)
+        
+    }
+    
     
         
 }
