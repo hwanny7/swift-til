@@ -29,6 +29,17 @@ class TodoListViewController: UITableViewController {
         cell.textLabel?.text = item
         return cell
     }
+    
+    // MARK: - TableView Delegate Methods
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+        tableView.deselectRow(at: indexPath, animated: true)
+        // 선택된 셀 백그라운드 복구
+    }
+    
+        
 }
+
 
 
