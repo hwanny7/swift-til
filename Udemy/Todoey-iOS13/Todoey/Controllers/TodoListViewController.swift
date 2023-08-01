@@ -6,26 +6,17 @@ class TodoListViewController: UITableViewController {
     
     var itemArray: [TodoItem] = []
     
-    let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let first = TodoItem(title: "hello")
-        let second = TodoItem(title: "bye")
-        
-        itemArray.append(first)
-        itemArray.append(second)
-        
-        if let items = defaults.array(forKey: "newArray") as? [TodoItem] {
-            itemArray = items
-        }
+        loadItems()
     }
     
     // MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Return the number of rows in the section
         return itemArray.count
     }
 
@@ -44,15 +35,11 @@ class TodoListViewController: UITableViewController {
         
         let index:Int = indexPath.row
         
-        if itemArray[index].done == false {
-            itemArray[index].done = true
-        } else {
-            itemArray[index].done = false
-        }
+        itemArray[index].done = !itemArray[index].done
         
         self.tableView.reloadRows(at: [indexPath], with: .automatic)
         
-//        self.defaults.set(self.itemArray, forKey: "newArray")
+        saveItems()
 
         tableView.deselectRow(at: indexPath, animated: true)
         // 선택된 셀 백그라운드 복구
@@ -71,10 +58,10 @@ class TodoListViewController: UITableViewController {
             
             if !userTextField.isEmpty {
                 self.itemArray.append(item)
-                self.defaults.set(self.itemArray, forKey: "newArray")
+                self.saveItems()
                 
-                let index = IndexPath(index: self.itemArray.count - 1)
-                self.tableView.reloadRows(at: [index], with: .automatic)
+//                let index = IndexPath(index: self.itemArray.count - 1)
+//                self.tableView.reloadRows(at: [index], with: .automatic)
             }
             
         }
@@ -87,7 +74,30 @@ class TodoListViewController: UITableViewController {
         
     }
     
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(self.itemArray)
+            try data.write(to: self.dataFilePath!)
+        } catch {
+            print("Error encoding item array, \(error)")
+        }
+        self.tableView.reloadData()
+    }
     
+    func loadItems() {
+        guard let data = try? Data(contentsOf: dataFilePath!) else { return }
+        
+        let decoder = PropertyListDecoder()
+        
+        do {
+            let decodedData = try decoder.decode([TodoItem].self, from: data)
+            itemArray = decodedData
+        } catch {
+            print("Error occured: \(error)")
+        }
+    }
         
 }
 
