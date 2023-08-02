@@ -8,16 +8,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller-->
+        <!--Todoey-->
         <scene sceneID="bPI-eR-iEx">
             <objects>
-                <tableViewController id="Jxr-2f-fK0" sceneMemberID="viewController">
+                <tableViewController id="Jxr-2f-fK0" customClass="CategoryViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="6Mh-an-Pj3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="CEz-kj-JhY">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryCell" id="CEz-kj-JhY">
                                 <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CEz-kj-JhY" id="hOL-LW-Wrj">
@@ -31,7 +31,14 @@
                             <outlet property="delegate" destination="Jxr-2f-fK0" id="S3w-AV-Yo2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Iq8-nb-Hqp"/>
+                    <navigationItem key="navigationItem" title="Todoey" id="Iq8-nb-Hqp">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="73s-rV-7Vx">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="Jxr-2f-fK0" id="OPQ-Mb-Jr2"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="WFd-2W-yjf" kind="show" identifier="goToItems" id="54V-F5-wQv"/>
                     </connections>
@@ -40,7 +47,7 @@
             </objects>
             <point key="canvasLocation" x="1422" y="-25"/>
         </scene>
-        <!--Todoey-->
+        <!--Items-->
         <scene sceneID="cDP-ux-2tW">
             <objects>
                 <tableViewController id="WFd-2W-yjf" customClass="TodoListViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
@@ -71,7 +78,7 @@
                             <outlet property="delegate" destination="WFd-2W-yjf" id="3V0-8p-gGb"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoey" id="dXA-Fm-mbT">
+                    <navigationItem key="navigationItem" title="Items" id="dXA-Fm-mbT">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="vp5-cv-DES">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
