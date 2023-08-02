@@ -38,11 +38,9 @@ class TodoListViewController: UITableViewController {
         let index:Int = indexPath.row
         
         itemArray[index].done = !itemArray[index].done
-        
+        saveItems()
         self.tableView.reloadRows(at: [indexPath], with: .automatic)
         
-        saveItems()
-
         tableView.deselectRow(at: indexPath, animated: true)
         // 선택된 셀 백그라운드 복구
     }
@@ -88,8 +86,7 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    func loadItems() {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
             itemArray = try context.fetch(request)
         } catch {
@@ -99,5 +96,19 @@ class TodoListViewController: UITableViewController {
         
 }
 
+// MARK: - searchBar methods
 
+extension TodoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let searchInput = searchBar.text!
+        
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchInput)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+        
+        self.tableView.reloadData()
+    }
+}
 
