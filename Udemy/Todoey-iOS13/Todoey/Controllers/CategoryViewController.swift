@@ -69,5 +69,16 @@ class CategoryViewController: UITableViewController {
         }
     }
     
+    func loadItems() {
+        let request: NSFetchRequest<Category> = Category.fetchRequest()
+        
+        do {
+            categoryArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+        self.tableView.reloadData()
+    }
+    
 
 }
