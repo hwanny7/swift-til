@@ -39,6 +39,7 @@ class TodoListViewController: UITableViewController {
         
         itemArray[index].done = !itemArray[index].done
         saveItems()
+        
         self.tableView.reloadRows(at: [indexPath], with: .automatic)
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -92,6 +93,7 @@ class TodoListViewController: UITableViewController {
         } catch {
             print("Error fetching data from context \(error)")
         }
+        self.tableView.reloadData()
     }
         
 }
@@ -107,8 +109,19 @@ extension TodoListViewController: UISearchBarDelegate {
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // 한 번 검색을 한 뒤에 변경되는 경우를 감지한다.
         
-        self.tableView.reloadData()
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+
+                print(searchBar.resignFirstResponder())
+
+            print("hello")
+        }
     }
 }
 
