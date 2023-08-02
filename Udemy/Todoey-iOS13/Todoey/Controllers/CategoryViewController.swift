@@ -27,7 +27,7 @@ class CategoryViewController: UITableViewController {
                 self.categoryArray.append(category)
                 self.saveItems()
                 
-                let indexPathOfNewItem = IndexPath(row: self.itemArray.count - 1, section: 0)
+                let indexPathOfNewItem = IndexPath(row: self.categoryArray.count - 1, section: 0)
                 self.tableView.insertRows(at: [indexPathOfNewItem], with: .none)
             }
             
@@ -61,6 +61,13 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView Delegate Methods
     
     // MARK: - Data Manipulation Methods
+    func saveItems() {
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context \(error)")
+        }
+    }
     
 
 }
