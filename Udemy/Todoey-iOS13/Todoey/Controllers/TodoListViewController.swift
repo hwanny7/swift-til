@@ -7,13 +7,13 @@ class TodoListViewController: UITableViewController {
     
     var itemArray: [Item] = []
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        loadItems()
+        loadItems()
     }
     
     // MARK: - TableView Datasource Methods
@@ -64,8 +64,8 @@ class TodoListViewController: UITableViewController {
                 self.itemArray.append(item)
                 self.saveItems()
                 
-//                let index = IndexPath(index: self.itemArray.count - 1)
-//                self.tableView.reloadRows(at: [index], with: .automatic)
+                let indexPathOfNewItem = IndexPath(row: self.itemArray.count - 1, section: 0)
+                self.tableView.insertRows(at: [indexPathOfNewItem], with: .none)
             }
             
         }
@@ -78,29 +78,24 @@ class TodoListViewController: UITableViewController {
         
     }
     
+    // MARK: - Save and Load Items
+    
     func saveItems() {
-
-        
         do {
             try context.save()
         } catch {
             print("Error saving context \(error)")
         }
-        self.tableView.reloadData()
     }
     
-//    func loadItems() {
-//        guard let data = try? Data(contentsOf: dataFilePath!) else { return }
-//
-//        let decoder = PropertyListDecoder()
-//
-//        do {
-//            let decodedData = try decoder.decode([TodoItem].self, from: data)
-//            itemArray = decodedData
-//        } catch {
-//            print("Error occured: \(error)")
-//        }
-//    }
+    func loadItems() {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+    }
         
 }
 
