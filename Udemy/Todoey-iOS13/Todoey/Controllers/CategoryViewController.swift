@@ -10,6 +10,7 @@ class CategoryViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadItems()
     }
     
     // MARK: - Add New Categories
@@ -59,6 +60,19 @@ class CategoryViewController: UITableViewController {
     
     
     // MARK: - TableView Delegate Methods
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToItems", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! TodoListViewController
+        
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        destinationVC.selectedCategory = categoryArray[indexPath.row]
+    }
+    
+    
     
     // MARK: - Data Manipulation Methods
     func saveItems() {
