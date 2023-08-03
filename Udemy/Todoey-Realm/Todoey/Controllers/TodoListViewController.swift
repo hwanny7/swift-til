@@ -41,18 +41,22 @@ class TodoListViewController: UITableViewController {
     
     // MARK: - TableView Delegate Methods
     
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//
-//        let index:Int = indexPath.row
-//
-//        todoItems[index].done = !todoItems[index].done
-////        saveItems()
-//
-//        self.tableView.reloadRows(at: [indexPath], with: .automatic)
-//
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        // 선택된 셀 백그라운드 복구
-//    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            } catch {
+                print("Error saving done satus, \(error)")
+            }
+        }
+
+        tableView.deselectRow(at: indexPath, animated: true)
+        // 선택된 셀 백그라운드 복구
+    }
     
     // MARK: - Add New Items
     
@@ -65,15 +69,15 @@ class TodoListViewController: UITableViewController {
             
             if let currentCategory = self.selectedCategory {
                 do {
+                    let item = Item(title: userTextField)
                     try self.realm.write {
-                        let item = Item(title: userTextField)
                         self.selectedCategory?.items.append(item)
                     }
+                    self.tableView.reloadData()
                 } catch {
                     print("Error saving context \(error)")
                 }
             }
-            self.tableView.reloadData()
         }
         alert.addTextField() { alertTextField in
             alertTextField.placeholder = "Create new item"
