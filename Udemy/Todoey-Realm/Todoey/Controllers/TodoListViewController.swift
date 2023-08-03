@@ -1,14 +1,16 @@
 
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray: [Item] = []
+    var todoItems: Results<Item>?
+    let realm = try! Realm()
+    
     var selectedCategory: Category? {
         didSet {
-//            loadItems()
+            loadItems()
         }
     }
     // viewDidLoad에서 진행해도 상관없음. 안젤라는 computed property를 보여주고 싶었던 것 같음
@@ -18,37 +20,39 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
     }
     
     // MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
+        return todoItems?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        let item = itemArray[indexPath.row]
-        cell.textLabel?.text = item.title
-        cell.accessoryType = item.done ? .checkmark : .none
+        if let item = todoItems?[indexPath.row] {
+            cell.textLabel?.text = item.title
+            cell.accessoryType = item.done ? .checkmark : .none
+        }
 
         return cell
     }
     
     // MARK: - TableView Delegate Methods
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let index:Int = indexPath.row
-        
-        itemArray[index].done = !itemArray[index].done
-//        saveItems()
-        
-        self.tableView.reloadRows(at: [indexPath], with: .automatic)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        // 선택된 셀 백그라운드 복구
-    }
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//
+//        let index:Int = indexPath.row
+//
+//        todoItems[index].done = !todoItems[index].done
+////        saveItems()
+//
+//        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+//
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        // 선택된 셀 백그라운드 복구
+//    }
     
     // MARK: - Add New Items
     
@@ -59,19 +63,17 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: NSLocalizedString("Add item", comment: "Default acition"), style: .default) { action in
             guard let userTextField = alert.textFields?.first?.text else { return }
             
-//            let item = Item(context: self.context)
-//            item.title = userTextField
-//            item.done = false
-//            item.parentCategory = self.selectedCategory
-//
-//            if !userTextField.isEmpty {
-//                self.itemArray.append(item)
-//                self.saveItems()
-//
-//                let indexPathOfNewItem = IndexPath(row: self.itemArray.count - 1, section: 0)
-//                self.tableView.insertRows(at: [indexPathOfNewItem], with: .none)
-//            }
-            
+            if let currentCategory = self.selectedCategory {
+                do {
+                    try self.realm.write {
+                        let item = Item(title: userTextField)
+                        self.selectedCategory?.items.append(item)
+                    }
+                } catch {
+                    print("Error saving context \(error)")
+                }
+            }
+            self.tableView.reloadData()
         }
         alert.addTextField() { alertTextField in
             alertTextField.placeholder = "Create new item"
@@ -82,35 +84,15 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    // MARK: - Save and Load Items
+    // MARK: - Load Items
     
-//    func saveItems() {
-//        do {
-//            try context.save()
-//        } catch {
-//            print("Error saving context \(error)")
-//        }
-//    }
     
-//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//        // CoreData와 Swift의 Optional의 정의가 다르다.
-//
-//        if let addtioanlPredicate = predicate {
-//            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtioanlPredicate])
-//            request.predicate = compoundPredicate
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//        // 검색어가 있을 때는 카테고리와 검색어를 Compound로 묶는다.
-//
-//        do {
-//            itemArray = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
-//        self.tableView.reloadData()
-//    }
+    func loadItems() {
+
+        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        
+        self.tableView.reloadData()
+    }
         
 }
 
