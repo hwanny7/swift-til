@@ -92,8 +92,15 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
-        let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let addtioanlPredicate = predicate {
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtioanlPredicate])
+            request.predicate = compoundPredicate
+        } else {
+            request.predicate = categoryPredicate
+        }
         
         do {
             itemArray = try context.fetch(request)
@@ -112,10 +119,10 @@ extension TodoListViewController: UISearchBarDelegate {
         let searchInput = searchBar.text!
         
         let request: NSFetchRequest<Item> = Item.fetchRequest()
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchInput)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchInput)
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadItems(with: request)
+        loadItems(with: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -124,10 +131,10 @@ extension TodoListViewController: UISearchBarDelegate {
         if searchBar.text?.count == 0 {
             loadItems()
             
-
-                print(searchBar.resignFirstResponder())
-
-            print("hello")
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            // x 버튼 눌렀을 때도 키보드가 사라지게 하기 위함
         }
     }
 }
