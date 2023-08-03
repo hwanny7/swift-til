@@ -1,16 +1,18 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    var categoryArray: [Category] = []
+    let realm = try! Realm()
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categoryArray: Results<Category>!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadItems()
+        loadCategories()
     }
     
     // MARK: - Add New Categories
@@ -21,12 +23,10 @@ class CategoryViewController: UITableViewController {
         let action = UIAlertAction(title: NSLocalizedString("Add Category", comment: "Default acition"), style: .default) { action in
             guard let userTextField = alert.textFields?.first?.text else { return }
             
-            let category = Category(context: self.context)
-            category.name = userTextField
+            let category = Category(name: userTextField)
             
             if !userTextField.isEmpty {
-                self.categoryArray.append(category)
-                self.saveItems()
+                self.save(category: category)
                 
                 let indexPathOfNewItem = IndexPath(row: self.categoryArray.count - 1, section: 0)
                 self.tableView.insertRows(at: [indexPathOfNewItem], with: .none)
@@ -75,22 +75,18 @@ class CategoryViewController: UITableViewController {
     
     
     // MARK: - Data Manipulation Methods
-    func saveItems() {
+    func save(category: Category) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Error saving context \(error)")
         }
     }
     
-    func loadItems() {
-        let request: NSFetchRequest<Category> = Category.fetchRequest()
-        
-        do {
-            categoryArray = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
+    func loadCategories() {
+        categoryArray = realm.objects(Category.self)
         self.tableView.reloadData()
     }
     
