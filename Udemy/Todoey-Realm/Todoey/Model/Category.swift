@@ -11,7 +11,7 @@ import RealmSwift
 
 class Category: Object {
     @Persisted var name: String
-    let items = List<Item>()
+    @Persisted var items: List<Item>
     
     convenience init(name: String){
         self.init()
