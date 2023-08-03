@@ -7,3 +7,17 @@
 //
 
 import Foundation
+import RealmSwift
+
+class Category: Object {
+    @Persisted var name: String
+    let items = List<Item>()
+    
+    convenience init(name: String){
+        self.init()
+        self.name = name
+    }
+    
+}
+
+
