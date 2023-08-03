@@ -7,7 +7,7 @@ class CategoryViewController: UITableViewController {
     
     let realm = try! Realm()
     
-    var categoryArray: Results<Category>!
+    var categoryArray: Results<Category>?
 
 
     override func viewDidLoad() {
@@ -27,8 +27,8 @@ class CategoryViewController: UITableViewController {
             
             if !userTextField.isEmpty {
                 self.save(category: category)
-                
-                let indexPathOfNewItem = IndexPath(row: self.categoryArray.count - 1, section: 0)
+                let indexPathOfNewItem = IndexPath(row: self.categoryArray!.count - 1, section: 0)
+                // 빈 리스트에 추가해도 위에서 save를 하는 순간 count가 1이 되기 때문에 문제가 없다.
                 self.tableView.insertRows(at: [indexPathOfNewItem], with: .none)
             }
             
@@ -47,13 +47,13 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categoryArray?.count ?? 0
+        // func의 반환 값이 Int이기 때문에 ?? operator를 사용해준다.
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let category = categoryArray[indexPath.row]
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = categoryArray?[indexPath.row].name
 
         return cell
     }
@@ -69,7 +69,7 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
-        destinationVC.selectedCategory = categoryArray[indexPath.row]
+        destinationVC.selectedCategory = categoryArray![indexPath.row]
     }
     
     
