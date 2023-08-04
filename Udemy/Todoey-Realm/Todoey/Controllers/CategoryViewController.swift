@@ -52,13 +52,16 @@ class CategoryViewController: SwipeTableViewController {
         // func의 반환 값이 Int이기 때문에 ?? operator를 사용해준다.
     }
     
-
+    
+    // MARK: - Swipe Cell Methods
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categoryArray?[indexPath.row].name
 
         return cell
     }
+    
 
 
     // MARK: - TableView Delegate Methods
@@ -90,6 +93,19 @@ class CategoryViewController: SwipeTableViewController {
     func loadCategories() {
         categoryArray = realm.objects(Category.self)
         self.tableView.reloadData()
+    }
+    
+    // MARK: - Delete Data From Swipe
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDeletion = self.categoryArray?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+            } catch {
+                print("Error delete category \(error)")
+            }
+        }
     }
 }
 

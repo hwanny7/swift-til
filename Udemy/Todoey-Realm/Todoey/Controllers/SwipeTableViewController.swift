@@ -20,7 +20,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
         cell.delegate = self
-        
         return cell
     }
 
@@ -32,22 +31,18 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         // 오른쪽으로 swife 했을 때
 
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            print("delete !")
-//            if let categoryForDeletion = self.categoryArray?[indexPath.row] {
-//                do {
-//                    try self.realm.write {
-//                        self.realm.delete(categoryForDeletion)
-//                    }
-//                } catch {
-//                    print("Error delete category \(error)")
-//                }
-//            }
+            self.updateModel(at: indexPath)
         }
 
         deleteAction.image = UIImage(named: "delete-icon")
 
         return [deleteAction]
     }
+    
+    func updateModel(at indexPath: IndexPath) {
+        
+    }
+    
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
         var options = SwipeOptions()
