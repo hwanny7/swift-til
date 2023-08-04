@@ -93,7 +93,7 @@ class TodoListViewController: UITableViewController {
     
     func loadItems() {
 
-        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        todoItems = selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: true)
         
         self.tableView.reloadData()
     }
@@ -106,7 +106,7 @@ extension TodoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let searchInput = searchBar.text!
         
-        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchInput).sorted(byKeyPath: "title", ascending: true)
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchInput).sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
         
     }
