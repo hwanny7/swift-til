@@ -13,6 +13,7 @@ class CategoryViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80.0
         loadCategories()
     }
 
@@ -100,16 +101,25 @@ extension CategoryViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
         
         guard orientation == .right else { return nil }
+        // 오른쪽으로 swife 했을 때
 
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            // handle action by updating model with deletion
+            
+            if let categoryForDeletion = self.categoryArray?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        self.realm.delete(categoryForDeletion)
+                    }
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                } catch {
+                    print("Error delete category \(error)")
+                }
+            }
         }
 
-        // customize the action appearance
-        deleteAction.image = UIImage(named: "delete")
+        deleteAction.image = UIImage(named: "delete-icon")
 
         return [deleteAction]
     }
-    
-    
 }
+
