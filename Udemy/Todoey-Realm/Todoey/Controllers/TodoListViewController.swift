@@ -102,28 +102,26 @@ class TodoListViewController: UITableViewController {
 
 // MARK: - searchBar methods
 
-//extension TodoListViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let searchInput = searchBar.text!
-//        
-//        let request: NSFetchRequest<Item> = Item.fetchRequest()
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchInput)
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        
-//        loadItems(with: request, predicate: predicate)
-//    }
-//    
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        // 한 번 검색을 한 뒤에 변경되는 경우를 감지한다.
-//        
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//            
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//            // x 버튼 눌렀을 때도 키보드가 사라지게 하기 위함
-//        }
-//    }
-//}
+extension TodoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let searchInput = searchBar.text!
+        
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchInput).sorted(byKeyPath: "title", ascending: true)
+        tableView.reloadData()
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // 한 번 검색을 한 뒤에 변경되는 경우를 감지한다.
+        
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            // x 버튼 눌렀을 때도 키보드가 사라지게 하기 위함
+        }
+    }
+}
 
