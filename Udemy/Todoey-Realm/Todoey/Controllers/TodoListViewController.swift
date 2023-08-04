@@ -6,6 +6,7 @@ import RealmSwift
 class TodoListViewController: UITableViewController {
     
     var todoItems: Results<Item>?
+    
     let realm = try! Realm()
     
     var selectedCategory: Category? {
@@ -70,8 +71,9 @@ class TodoListViewController: UITableViewController {
             if let currentCategory = self.selectedCategory {
                 do {
                     let item = Item(title: userTextField)
+                    print(item)
                     try self.realm.write {
-                        self.selectedCategory?.items.append(item)
+                        currentCategory.items.append(item)
                     }
                     self.tableView.reloadData()
                 } catch {

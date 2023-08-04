@@ -2,6 +2,7 @@
 import UIKit
 import CoreData
 import RealmSwift
+import SwipeCellKit
 
 class CategoryViewController: UITableViewController {
 
@@ -50,9 +51,11 @@ class CategoryViewController: UITableViewController {
         return categoryArray?.count ?? 0
         // func의 반환 값이 Int이기 때문에 ?? operator를 사용해준다.
     }
+    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         cell.textLabel?.text = categoryArray?[indexPath.row].name
 
         return cell
@@ -89,6 +92,24 @@ class CategoryViewController: UITableViewController {
         categoryArray = realm.objects(Category.self)
         self.tableView.reloadData()
     }
+}
 
+// MARK: - Swipe Cell Delegate Methods
 
+extension CategoryViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        
+        guard orientation == .right else { return nil }
+
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            // handle action by updating model with deletion
+        }
+
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete")
+
+        return [deleteAction]
+    }
+    
+    
 }
