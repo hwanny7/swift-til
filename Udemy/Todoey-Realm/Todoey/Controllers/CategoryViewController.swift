@@ -2,9 +2,8 @@
 import UIKit
 import CoreData
 import RealmSwift
-import SwipeCellKit
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
 
     let realm = try! Realm()
 
@@ -55,8 +54,7 @@ class CategoryViewController: UITableViewController {
     
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categoryArray?[indexPath.row].name
 
         return cell
@@ -93,40 +91,5 @@ class CategoryViewController: UITableViewController {
         categoryArray = realm.objects(Category.self)
         self.tableView.reloadData()
     }
-}
-
-// MARK: - Swipe Cell Delegate Methods
-
-extension CategoryViewController: SwipeTableViewCellDelegate {
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
-        
-        guard orientation == .right else { return nil }
-        // 오른쪽으로 swife 했을 때
-
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            
-            if let categoryForDeletion = self.categoryArray?[indexPath.row] {
-                do {
-                    try self.realm.write {
-                        self.realm.delete(categoryForDeletion)
-                    }
-                } catch {
-                    print("Error delete category \(error)")
-                }
-            }
-        }
-
-        deleteAction.image = UIImage(named: "delete-icon")
-
-        return [deleteAction]
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructive(automaticallyDelete: true, timing: .after)
-        options.transitionStyle = .border
-        return options
-    }
-    
 }
 
