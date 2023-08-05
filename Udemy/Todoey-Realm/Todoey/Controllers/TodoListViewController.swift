@@ -21,9 +21,15 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 80.0
 //        print(Realm.Configuration.defaultConfiguration.fileURL!)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        guard let nav = navigationController?.navigationBar.scrollEdgeAppearance else { return }
+        nav.backgroundColor = UIColor.blue
+    }
+    
     
     // MARK: - TableView Datasource Methods
     
@@ -89,6 +95,20 @@ class TodoListViewController: SwipeTableViewController {
         alert.addAction(action)
         present(alert, animated: true)
         
+    }
+    
+    // MARK: - Delete Data From Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let ItemForDeletion = self.todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(ItemForDeletion)
+                }
+            } catch {
+                print("Error delete category \(error)")
+            }
+        }
     }
     
     // MARK: - Load Items
