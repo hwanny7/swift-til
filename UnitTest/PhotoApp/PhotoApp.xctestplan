@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "4CF077AA-A8DF-4E79-A12B-A637B42236B1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:PhotoApp.xcodeproj",
+      "identifier" : "AE16ACBE2A7DE26D00CB6B81",
+      "name" : "PhotoApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:PhotoApp.xcodeproj",
+        "identifier" : "AE16ACD42A7DE26D00CB6B81",
+        "name" : "PhotoAppTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:PhotoApp.xcodeproj",
+        "identifier" : "AE16ACDE2A7DE26D00CB6B81",
+        "name" : "PhotoAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
