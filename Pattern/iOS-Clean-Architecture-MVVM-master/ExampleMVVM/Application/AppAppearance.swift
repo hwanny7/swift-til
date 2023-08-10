@@ -17,6 +17,8 @@ final class AppAppearance {
             UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         }
     }
+    
+    
 }
 
 extension UINavigationController {
