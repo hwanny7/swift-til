@@ -15,28 +15,45 @@ class ViewController: UIViewController {
     }
     
     func setupViews() {
-        let label1 = makeLabel(withText: "label1")
+        let label1 = makeLabel(withText: "Name")
         view.addSubview(label1)
         
-        label1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
-        label1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
+        let textField = makeTextField(with: "submit name")
+        view.addSubview(textField)
+        
+        NSLayoutConstraint.activate([
+            label1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            label1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            
+            textField.leadingAnchor.constraint(equalTo: label1.trailingAnchor, constant: 8),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            textField.firstBaselineAnchor.constraint(equalTo: label1.firstBaselineAnchor),
+            
+        ])
+        label1.setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .horizontal)
+        
 
     }
     
     func makeLabel(withText text: String) -> UILabel {
-        let label = BigLabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = text
-        label.font = UIFont.systemFont(ofSize: 32)
         label.backgroundColor = .yellow
         
         return label
     }
+    
+    func makeTextField(with text: String) -> UITextField {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = text
+        textField.backgroundColor = .lightGray
+        
+        return textField
+        
+    }
+    
 }
 
-class BigLabel: UILabel {
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: 200, height: 300)
-    }
-}
 
