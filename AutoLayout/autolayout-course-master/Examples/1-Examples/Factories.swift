@@ -143,6 +143,8 @@ public func makeSpacerView(height: CGFloat? = nil) -> UIView {
     return spacerView
 }
 
+// 5개 row마다 space를 추가한다. 아래에 setActiveBreakable을 override했음
+
 public extension NSLayoutConstraint {
     @objc func setActiveBreakable(priority: UILayoutPriority = UILayoutPriority(900)) {
         self.priority = priority

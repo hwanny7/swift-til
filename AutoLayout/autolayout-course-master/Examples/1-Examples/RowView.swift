@@ -35,7 +35,7 @@ class RowView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 200, height: 31)
+        return CGSize(width: 300, height: 31)
     }
     
 }
