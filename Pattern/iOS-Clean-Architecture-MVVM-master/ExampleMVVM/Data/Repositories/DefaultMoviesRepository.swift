@@ -32,7 +32,7 @@ extension DefaultMoviesRepository: MoviesRepository {
         let task = RepositoryTask()
 
         cache.getResponse(for: requestDTO) { [weak self, backgroundQueue] result in
-
+            
             if case let .success(responseDTO?) = result {
                 cached(responseDTO.toDomain())
             }

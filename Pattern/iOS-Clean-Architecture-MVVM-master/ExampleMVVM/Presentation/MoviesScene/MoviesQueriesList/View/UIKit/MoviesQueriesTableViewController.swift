@@ -21,7 +21,7 @@ final class MoviesQueriesTableViewController: UITableViewController, StoryboardI
     private func bind(to viewModel: MoviesQueryListViewModel) {
         viewModel.items.observe(on: self) { [weak self] _ in self?.tableView.reloadData() }
     }
-    
+     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -61,3 +61,5 @@ extension MoviesQueriesTableViewController {
         viewModel.didSelect(item: viewModel.items.value[indexPath.row])
     }
 }
+
+

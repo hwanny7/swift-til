@@ -19,6 +19,7 @@ extension DispatchQueue: DataTransferDispatchQueue {
 
 protocol DataTransferService {
     typealias CompletionHandler<T> = (Result<T, DataTransferError>) -> Void
+    //
     
     @discardableResult
     func request<T: Decodable, E: ResponseRequestable>(
@@ -26,6 +27,8 @@ protocol DataTransferService {
         on queue: DataTransferDispatchQueue,
         completion: @escaping CompletionHandler<T>
     ) -> NetworkCancellable? where E.Response == T
+    
+    // E.Response는 MoviesResponseDTO ( APIEndpoints 파일에서 명시 )
     
     @discardableResult
     func request<T: Decodable, E: ResponseRequestable>(
@@ -91,6 +94,8 @@ extension DefaultDataTransferService: DataTransferService {
                     data: data,
                     decoder: endpoint.responseDecoder
                 )
+                // 여기서 반환 받은 값으로 T를 추론
+                
                 queue.asyncExecute { completion(result) }
             case .failure(let error):
                 self.errorLogger.log(error: error)
@@ -123,6 +128,7 @@ extension DefaultDataTransferService: DataTransferService {
             }
         }
     }
+    // 결과 값이 없이 성공, 실패 여부만 반환하는 경우
 
     func request<E>(
         with endpoint: E,

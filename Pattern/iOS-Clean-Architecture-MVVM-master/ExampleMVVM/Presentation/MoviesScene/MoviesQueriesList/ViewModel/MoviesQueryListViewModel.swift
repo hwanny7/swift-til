@@ -57,6 +57,7 @@ final class DefaultMoviesQueryListViewModel: MoviesQueryListViewModel {
         let useCase = fetchRecentMovieQueriesUseCaseFactory(request, completion)
         useCase.start()
     }
+    
 }
 
 // MARK: - INPUT. View event methods

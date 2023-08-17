@@ -44,7 +44,8 @@ class Checkbox: UIControl {
         addTarget(self, action: #selector(touchUpinside), for: .touchUpInside)
     }
     
-    @objc func touchUpinside() {
+    @objc func touchUpinside(_ sender: UIButton) {
+        print(sender)
         checked = !checked
         sendActions(for: .valueChanged)
     }
